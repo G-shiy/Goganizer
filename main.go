@@ -6,7 +6,7 @@ import (
 	"log"
 	"os"
 
-	"github.com/G-shiy/GoGanizer/handlers"
+	"github.com/G-shiy/goganizer/handlers"
 )
 
 //go:embed rules/rules.json
