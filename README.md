@@ -1,45 +1,40 @@
-# goganizer
+# 🐹 Goganizer
 
-Um utilitário de linha de comando escrito em **Go**, projetado para **organizar arquivos automaticamente** com base em regras definidas pelo usuário.
-O goganizer lê um conjunto de extensões e seus diretórios de destino e move os arquivos correspondentes para a pasta correta.
+Um utilitário de linha de comando escrito em **Go**, projetado para **organizar arquivos automaticamente** com base em regras definidas pelo usuário.  
+O Goganizer lê um conjunto de extensões e seus diretórios de destino e move os arquivos correspondentes para a pasta correta.
 
-Ideal para organizar diretórios bagunçados, pastas de downloads, documentos, imagens e qualquer ambiente com alto volume de arquivos.
+Ideal para organizar diretórios bagunçados, downloads, documentos, imagens e qualquer ambiente com alto volume de arquivos.
 
----
 
 ## 🚀 Funcionalidades
 
 - Organização automática por extensão.
-- Leitura de regras via arquivo JSON externo.
-- Criação automática de diretórios.
+- Leitura de regras via arquivo JSON externo ou embutido no binário.
+- Criação automática de diretórios quando necessário.
 - Suporte a arquivos sem extensão.
 - Rápido, leve e multiplataforma (Linux, macOS, Windows).
-- Não usa dependências externas.
-
----
+- Sem dependências externas.
 
 ## 📁 Estrutura do Projeto
+
 ```bash
 goganizer/
 │
 ├── main.go
+├── handlers/
+│    └── rules.go
 ├── rules/
 │    └── rules.json
 └── README.md
 ```
 
----
-
 ## ⚙️ Como Funciona
 
-1. O programa lê o arquivo `rules/rules.json`.
-2. Varre o diretório atual (ou outro indicado).
-3. Identifica a extensão de cada arquivo.
-4. Move o arquivo para o diretório correspondente.
-5. Cria automaticamente diretórios que não existam.
-
----
-
+1. O programa lê o arquivo `rules/rules.json` (ou usa regras embutidas, se compilado assim).  
+2. Varre o diretório atual (ou outro indicado como argumento).  
+3. Identifica a extensão de cada arquivo.  
+4. Move o arquivo para o diretório correspondente.  
+5. Cria automaticamente diretórios que não existam.  
 ## 📜 Exemplo de `rules.json`
 
 ```json
@@ -61,21 +56,60 @@ goganizer/
 }
 ```
 
-## 📥 Instalação e Uso
+## 📥 Instalação
 
-### 1. Clone o repositório
+### 1. Via `go install` (recomendado)
+
+Se você já tem o Go instalado:
 
 ```bash
-git clone https://github.com/G-shiy/goganizer.git
-cd goganizer
+go install github.com/G-shiy/goganizer/cmd/goganizer@latest
 ```
-### 2. Compile o programa ou use o binário pré-compilado
+
+> O binário será instalado automaticamente no diretório `$GOBIN` (ou `$GOPATH/bin`) e poderá ser executado de qualquer lugar.
+
+Para rodar na pasta atual:
+
+```bash
+goganizer
+```
+
+Você também pode organizar outro diretório passando o caminho como argumento:
+
+```bash
+goganizer /caminho/para/pasta
+```
+
+---
+
+### 2. Compilando manualmente
+
+Clone o repositório:
+
+```bash
+git clone https://github.com/G-shiy/goganizer.git cd goganizer
+```
+
+Compile o programa:
 
 ```bash
 go build -o goganizer main.go
 ```
-### 3. Execute o programa
+
+E execute:
 
 ```bash
 ./goganizer
 ```
+
+> No Windows, o executável será `goganizer.exe`.
+
+---
+
+## 💡 Dicas
+
+- Mantenha seu `rules.json` atualizado com as extensões que você mais utiliza.
+    
+- O Goganizer cria as pastas automaticamente apenas se elas ainda não existirem.
+    
+- Arquivos sem extensão podem ser organizados em uma pasta específica (`no_extension` por padrão).****
