@@ -8,17 +8,22 @@ import (
 	"path/filepath"
 )
 
-func LoadRules(path string) (map[string]string, error) {
+func LoadRules(path string, embedded []byte) (map[string]string, error) {
+	var rules map[string]string
+	if embedded != nil {
+		if err := json.Unmarshal(embedded, &rules); err != nil {
+			return nil, fmt.Errorf("failed to unmarshal embedded JSON: %w", err)
+		}
+		return rules, nil
+	}
+
 	data, err := os.ReadFile(path)
 	if err != nil {
 		return nil, fmt.Errorf("failed to read file %s: %w", path, err)
 	}
-
-	var rules map[string]string
 	if err := json.Unmarshal(data, &rules); err != nil {
 		return nil, fmt.Errorf("failed to unmarshal JSON from %s: %w", path, err)
 	}
-
 	return rules, nil
 }
 
@@ -44,7 +49,7 @@ func OrganizeFiles(dir string, rules map[string]string) error {
 			if err := os.MkdirAll(destDir, 0o755); err != nil {
 				return fmt.Errorf("failed to create directory %s: %w", destDir, err)
 			}
-			fmt.Printf("Created directory: %s\n", destDir)
+			fmt.Printf("\033[33mCreated directory: %s\033[0m\n", destDir)
 		}
 
 		srcPath := filepath.Join(dir, entry.Name())
@@ -53,8 +58,7 @@ func OrganizeFiles(dir string, rules map[string]string) error {
 		if err := moveFile(srcPath, destPath); err != nil {
 			return fmt.Errorf("failed to move file from %s to %s: %w", srcPath, destPath, err)
 		}
-		fmt.Printf("Moved file: %s to %s\n", srcPath, destPath)
-
+		fmt.Printf("\033[36mMoved %s → %s\033[0m\n", srcPath, destPath)
 	}
 	return nil
 }

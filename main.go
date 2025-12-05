@@ -1,19 +1,31 @@
 package main
 
 import (
+	_ "embed"
 	"fmt"
 	"log"
+	"os"
 
 	"github.com/G-shiy/GoGanizer/handlers"
 )
 
+//go:embed rules/rules.json
+var defaultRules []byte
+
 func main() {
-	rules, err := handlers.LoadRules("./rules/rules.json")
+	dir := "."
+	if len(os.Args) > 1 {
+		dir = os.Args[1]
+	}
+
+	rules, err := handlers.LoadRules("./rules/rules.json", defaultRules)
 	if err != nil {
-		log.Fatal("Error loading rules")
+		log.Fatalf("\033[31mError loading rules: %v\033[0m\n", err)
 	}
-	if err := handlers.OrganizeFiles(".", rules); err != nil {
-		log.Fatal("Error organize files")
+	fmt.Printf("\033[36mOrganizing files in: %s\033[0m\n", dir)
+
+	if err := handlers.OrganizeFiles(dir, rules); err != nil {
+		log.Fatalf("\033[31mError organizing files: %v\033[0m\n", err)
 	}
-	fmt.Println("Organização concluida com sucesso")
+	fmt.Println("\033[32mOrganization completed successfully!\033[0m")
 }
